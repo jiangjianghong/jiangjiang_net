@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>江江宏的个人网站</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Dongle:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="Figure/tomato.svg" type="image/svg+xml">
+</head>
+<body>
+<div class="text-container">
+    <div> jiangjiang<img id="tomato-img" src="Figure/tomato.svg" alt="Scroll Down" width="50" height="50" style="margin-left: 10px;"></div>
+    
+    <button id="scroll-down-btn" title="More information" style="background: none; border: none; cursor: pointer; margin-top: 20px;">
+        <img src="Figure/down.svg" alt="Scroll Down" width="24" height="24">
+      </button>
+  </div>
+  <div class="gradient-bg">
+    <svg xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="goo">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+          <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -8" result="goo" />
+          <feBlend in="SourceGraphic" in2="goo" />
+        </filter>
+      </defs>
+    </svg>
+    <div class="gradients-container">
+      <div class="g1"></div>
+      <div class="g2"></div>
+      <div class="g3"></div>
+      <div class="g4"></div>
+      <div class="g5"></div>
+      <div class="interactive"></div>
+    </div>
+  </div>
+  <div class="content-container">
+    <!-- 占位符元素 -->
+    <div class="spacer"></div>
+    <!-- 实际内容 -->
+    <h1>你好</h1>
+    <p>这</p>
+    <p>这</p><p>这</p><p>这</p><p>这</p><p>这</p><p>这</p><p>这</p><p>这</p><p>这</p><p>这</p><p>这</p><p>这</p><p>这</p><p>这</p><p>这</p><p>这</p><p>这</p><p>这</p><p>这</p><p>这</p><p>这</p><p>这</p><p>这</p><p>这</p><p>这</p><p>这</p><p>这</p><p>这</p><p>这</p><p>这</p><p>这</p><p>这</p>
+  </div>
+  <script>
+    let scrollThreshold = 400; // 设置滚动触发的阈值
+    let accumulatedDelta = 0;
+    let isScrolling = false;
+
+    function easeInOutQuad(t) {
+      return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+    }
+
+    function smoothScroll(targetPosition, duration) {
+      const startPosition = window.scrollY;
+      const distance = targetPosition - startPosition;
+      let startTime = null;
+
+      function animation(currentTime) {
+        if (startTime === null) startTime = currentTime;
+        const timeElapsed = currentTime - startTime;
+        const run = easeInOutQuad(timeElapsed / duration) * distance + startPosition;
+        window.scrollTo(0, run);
+        if (timeElapsed < duration) requestAnimationFrame(animation);
+        else isScrolling = false; // 动画完成后重置正在滚动的标志
+      }
+
+      requestAnimationFrame(animation);
+    }
+
+    window.addEventListener('wheel', function(event) {
+      event.preventDefault(); // 阻止默认的滚动行为
+
+      if (isScrolling) return; // 如果正在滚动，则不执行新的滚动
+
+      accumulatedDelta += event.deltaY;
+
+      if (Math.abs(accumulatedDelta) >= scrollThreshold) {
+        isScrolling = true; // 设置正在滚动的标志
+        const delta = Math.sign(accumulatedDelta);
+        const viewportHeight = window.innerHeight;
+        const currentScrollTop = window.scrollY;
+        const nextScrollTop = currentScrollTop + delta * viewportHeight;
+
+        smoothScroll(nextScrollTop, 1000); // 平滑滚动到目标位置，持续时间为 1000 毫秒
+
+        accumulatedDelta = 0; // 重置累计的滚动距离
+      }
+    }, { passive: false }); // 确保 preventDefault 生效
+
+    document.getElementById('scroll-down-btn').addEventListener('click', function() {
+      if (isScrolling) return; // 如果正在滚动，则不执行新的滚动
+
+      isScrolling = true; // 设置正在滚动的标志
+      const viewportHeight = window.innerHeight;
+      const currentScrollTop = window.scrollY;
+      const nextScrollTop = currentScrollTop + viewportHeight;
+
+      smoothScroll(nextScrollTop, 1000); // 平滑滚动到目标位置，持续时间为 1000 毫秒
+    });
+    document.getElementById('tomato-img').addEventListener('click', function () {
+        const interval = setInterval(() => {
+          for (let i = 0; i < 5; i++) {
+            const tomato = document.createElement('img');
+            tomato.src = 'Figure/tomato.svg';
+            tomato.className = 'tomato-rain';
+            
+            // 随机生成初始水平位置
+            tomato.style.left = Math.random() * 100 + 'vw';
+            tomato.style.width = (Math.random() * 10 + 30) + 'px'; // 随机大小
+            tomato.style.height = tomato.style.width;
+            tomato.style.animationDuration = (Math.random() * 4 + 3) + 's'; // 随机下降速度
+            tomato.style.animationDelay = Math.random() * 2 + 's'; // 随机延迟时间
+      
+            // 自定义 CSS 变量来控制斜向移动和旋转角度
+            const xMove = Math.random() * 600 - 300; // 随机水平移动量（-100px ~ +100px）
+            const rotateAngle = Math.random() * 360 + 'deg'; // 随机旋转角度
+      
+            tomato.style.setProperty('--x-move', xMove + 'px');
+            tomato.style.setProperty('--rotate', rotateAngle);
+      
+            // 添加到页面
+            document.body.appendChild(tomato);
+      
+            // 动画结束后移除元素
+            tomato.addEventListener('animationend', () => {
+              tomato.remove();
+            });
+          }
+        }, 500);
+      
+        // 10秒后停止生成西红柿
+        setTimeout(() => {
+          clearInterval(interval);
+        }, 10000);
+      });
+      
+  </script>
+</body>
+</html>
